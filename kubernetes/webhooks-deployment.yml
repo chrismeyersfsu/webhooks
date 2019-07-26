@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: webhooks-deployment
+  labels:
+    app: webhooks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhooks
+  template:
+    metadata:
+      labels:
+        app: webhooks
+    spec:
+      containers:
+      - name: webhooks
+        image: chrismeyers/webhooks:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: webhooks_PORT
+          value: "8080"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: webhooks
+ labels:
+   name: webhooks
+spec:
+ type: "NodePort"
+ ports:
+   - name: http
+     port: 80
+     targetPort: 8080
+     protocol: TCP
+ selector:
+   app: webhooks
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: webhooks
+spec:
+  backend:
+    serviceName: webhooks
+    servicePort: 80

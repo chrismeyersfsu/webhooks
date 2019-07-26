@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <title>Webhook request log</title>
+</head>
+<body>
+{% for req in requests %}
+<textarea type="textbox" cols=200 rows=5>
+{{ req.headers }}
+</textarea>
+<br/>
+<textarea type="textbox" cols=200 rows=30>
+{{ req.body|tojson_pretty|safe }}
+</textarea>
+<hr>
+{% endfor %}
+</body>
+</html>
